@@ -1,0 +1,17 @@
+{
+    "name": "pointybeard/shell-args",
+    "description": "A simple interface for processing arguments passed on the command line.",
+    "keywords": ["shell", "arguments", "argv", "argc"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alistair Kearney",
+            "email": "hi@alistairkearney.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\ShellArgs\\": "src/"
+        }
+    }
+}
