@@ -11,16 +11,22 @@ A convenience class for loading arguments passed through the command line ($argv
 
 ## Syntax Supported
 
-`--blah=something`
+The following are examples of supported command syntax:
 
-`-x`
-
-`--aa`
-
-`-y something`
-
-`blah=something`
-
+```
+-x
+--aa
+--database=aDatabase
+-d:aDatabase
+--d aDatabase
+/d aDatabase
+-u http://www.theproject.com
+-y something
+-p:\Users\pointybeard\Sites\shellargs\
+-p:"\Users\pointybeard\Sites" 
+-h:local:host 
+/host=local-host
+```
 
 ## Examples
 
@@ -37,6 +43,11 @@ $args = new ArgumentIterator();
 // array of arguments. e.g. emulates "... -i --database blah"
 $args = new ArgumentIterator(false, [
     '-i', '--database', 'blah'
+]);
+
+// Aruments can an entire string too [Added 1.0.1]
+$args = new ArgumentIterator(false, [
+    '-i --database blah'
 ]);
 
 // Iterate over all the arguments
