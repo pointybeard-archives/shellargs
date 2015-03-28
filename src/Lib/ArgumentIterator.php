@@ -8,57 +8,43 @@ Class ArgumentIterator implements \Iterator
     private $keys;
     private $position = 0;
 
-    public function __construct($ignoreFirst=true, array $argv=NULL)
+    public function __construct($ignoreFirst=true, array $args=NULL)
     {
         // Constructor can accept an array of arguments, 
         // however if it's null, try to use ARGV instead
-        if(is_null($argv))
+        // Need to assign to a new variable, since this function
+        // would be destructive to $argv otherwise.
+        if(is_null($args))
         {
             global $argv;
+            $args = $argv;
         }
         
         $start=0;
         if($ignoreFirst == true){
-            $start++;
+            array_shift($args);
         }
-        
-        $name = NULL;
-        $this->position = 0;
-        $this->args = array();
-        $this->keys = array();
 
-        // Handle 5 different kinds of params
-        for($key = $start; $key < count($argv); $key++) {
-            $value = $argv[$key];
+        // Reconstruct the args string
+        $string = implode($args, ' ');
+        $matches = [];
 
-            // 1. --zz=something
-            if(preg_match('@^--[a-z0-9-_]+=@i', $value)) {
-                $bits = explode("=", $value, 2);
-                $name = ltrim($bits[0], '--');
-                $value = $bits[1];
+        /**
+         * Credit to "Jonathan Leffler" from Stack Overflow 
+         * for this regex (http://stackoverflow.com/a/13141314)
+         */
+        preg_match_all(
+            '@(?:-{1,2}|/)(?<name>\w+)(?:[=:]?|\s+)(?<value>[^-\s"][^"]*?|"[^"]*")?(?=\s+[-/]|$)@i',
+            $string,
+            $matches,
+            PREG_SET_ORDER
+        );
 
-            // 2. --aa
-            } elseif(substr($value, 0, 2) == '--') {
-                $name = ltrim($value, '-'); $value = true;
-
-            // 3. -x
-            } elseif($value{0} == '-' && isset($argv[$key + 1]) && $argv[$key + 1]{0} == '-') {
-                $name = ltrim($value, '-'); $value = true;
-
-            // 4. -y blah
-            } elseif($value{0} == '-' && isset($argv[$key + 1]) && $argv[$key + 1]{0} != '-') {
-                $name = ltrim($value, '-'); $value = $argv[$key+1];
-                $key++;
-
-            // 5. zz=something
-            } elseif(preg_match('@^[a-z0-9]([a-z0-9-_]+)?=@i', $value)) {
-                $bits = explode("=", $value, 2);
-                list($name, $value) = $bits;
-            }
-
-            $this->args[] = new Argument($name, $value);
-            $this->keys[] = $name;
+        foreach($matches as $arg){
+            $this->args[] = new Argument($arg['name'], (isset($arg['value']) ? $arg['value'] : true));
+            $this->keys[] = $arg['name'];
         }
+        return true;
     }
 
     public function find($name)
