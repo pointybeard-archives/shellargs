@@ -2,26 +2,25 @@
 
 namespace pointybeard\ShellArgs\Lib;
 
-Class ArgumentIterator implements \Iterator
+class ArgumentIterator implements \Iterator
 {
     private $args;
     private $keys;
     private $position = 0;
 
-    public function __construct($ignoreFirst=true, array $args=NULL)
+    public function __construct($ignoreFirst = true, array $args = null)
     {
-        // Constructor can accept an array of arguments, 
+        // Constructor can accept an array of arguments,
         // however if it's null, try to use ARGV instead
         // Need to assign to a new variable, since this function
         // would be destructive to $argv otherwise.
-        if(is_null($args))
-        {
+        if (is_null($args)) {
             global $argv;
             $args = $argv;
         }
-        
-        $start=0;
-        if($ignoreFirst == true){
+
+        $start = 0;
+        if ($ignoreFirst == true) {
             array_shift($args);
         }
 
@@ -30,7 +29,7 @@ Class ArgumentIterator implements \Iterator
         $matches = [];
 
         /**
-         * Credit to "Jonathan Leffler" from Stack Overflow 
+         * Credit to "Jonathan Leffler" from Stack Overflow
          * for this regex (http://stackoverflow.com/a/13141314)
          */
         preg_match_all(
@@ -40,19 +39,33 @@ Class ArgumentIterator implements \Iterator
             PREG_SET_ORDER
         );
 
-        foreach($matches as $arg){
+        foreach ($matches as $arg) {
             $this->args[] = new Argument($arg['name'], (isset($arg['value']) ? $arg['value'] : true));
             $this->keys[] = $arg['name'];
         }
+
         return true;
     }
-
-    public function find($name)
+    /**
+     * Look through the args array for a particular value. If $name is an array, it
+     * will look through until it finds a match and return the first one.
+     *
+     * @param  string|array $name
+     * @return array
+     */
+    public function find($names)
     {
-        return (in_array($name, $this->keys) 
-                    ? $this->args[array_search($name, $this->keys)] 
-                    : false
-        );
+        if (!is_array($names)) {
+            $names = [$names];
+        }
+
+        foreach ($names as $name) {
+            if (in_array($name, $this->keys)) {
+                return $this->args[array_search($name, $this->keys)];
+            };
+        }
+
+        return false;
     }
 
     public function rewind()
