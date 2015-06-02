@@ -23,8 +23,8 @@ The following are examples of supported command syntax:
 -u http://www.theproject.com
 -y something
 -p:\Users\pointybeard\Sites\shellargs\
--p:"\Users\pointybeard\Sites" 
--h:local:host 
+-p:"\Users\pointybeard\Sites"
+-h:local:host
 /host=local-host
 ```
 
@@ -35,7 +35,7 @@ The following are examples of supported command syntax:
 use pointybeard\ShellArgs\Lib;
 
 // Load up the arguments from $argv. By default
-// it will ignore the first item, which is the 
+// it will ignore the first item, which is the
 // script name
 $args = new ArgumentIterator();
 
@@ -52,9 +52,12 @@ $args = new ArgumentIterator(false, [
 
 // Iterate over all the arguments
 foreach($args as $a){
-    printf("%s => %s" . PHP_EOL, $a->name, $a->value);
+    printf("%s => %s" . PHP_EOL, $a->name(), $a->value());
 }
 
 // Find a specific argument by name
 $args->find('i');
+
+// Find also accepts and array of values, returning the first one that is valid
+$args->find(['h', 'help', 'usage']);
 ```
