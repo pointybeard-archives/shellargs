@@ -2,10 +2,10 @@
 
 namespace pointybeard\ShellArgs\Lib;
 
-class ArgumentIterator implements \Iterator
+class ArgumentIterator implements \Iterator, \Countable
 {
-    private $args;
-    private $keys;
+    private $args = [];
+    private $keys = [];
     private $position = 0;
 
     public function __construct($ignoreFirst = true, array $args = null)
@@ -91,5 +91,9 @@ class ArgumentIterator implements \Iterator
     public function valid()
     {
         return isset($this->args[$this->position]);
+    }
+    
+    public function count(){
+        return count($this->keys);
     }
 }
