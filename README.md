@@ -1,6 +1,8 @@
 Shell Arguments
 ===========
 
+[![Latest Stable Version](https://poser.pugx.org/pointybeard/shell-args/v/stable)](https://packagist.org/packages/pointybeard/shell-args) [![Total Downloads](https://poser.pugx.org/pointybeard/shell-args/downloads)](https://packagist.org/packages/pointybeard/shell-args) [![Latest Unstable Version](https://poser.pugx.org/pointybeard/shell-args/v/unstable)](https://packagist.org/packages/pointybeard/shell-args) [![License](https://poser.pugx.org/pointybeard/shell-args/license)](https://packagist.org/packages/pointybeard/shell-args)
+
 A convenience class for loading arguments passed through the command line ($argv)
 
 ## Features
