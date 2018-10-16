@@ -32,8 +32,9 @@ class ArgumentIterator implements \Iterator, \Countable
          * Credit to "Jonathan Leffler" from Stack Overflow
          * for this regex (http://stackoverflow.com/a/13141314)
          */
+        // 1 - Fixed <name> capturing group so it handles hyphens.
         preg_match_all(
-            '@(?:-{1,2}|/)(?<name>\w+)(?:[=:]?|\s+)(?<value>[^-\s"][^"]*?|"[^"]*")?(?=\s+[-/]|$)@i',
+            '@(?:-{1,2}|\/)(?<name>[\w-]+)(?:[=:]?|\s+)(?<value>[^-\s"][^"]*?|"[^"]*")?(?=\s+[-/]|$)@i',
             $string,
             $matches,
             PREG_SET_ORDER
