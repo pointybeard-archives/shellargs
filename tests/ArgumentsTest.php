@@ -1,7 +1,8 @@
 <?php
 use pointybeard\ShellArgs\Lib\ArgumentIterator;
+use PHPUnit\Framework\TestCase;
 
-class CommandTest extends \PHPUnit_Framework_TestCase
+class CommandTest extends TestCase
 {
     /** 
      * Create iterator using array of argments and check they have been set correctly.
@@ -13,15 +14,21 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             '-i',
             '-c cheese',
             '--database myDB',
-            '-h:local:host'
+            '-h:local:host',
+            '--lots-of-hyphens',
+            '--with-hyphen=alrighty',
         ]);
 
-        $this->assertEquals(5, iterator_count($it));
+        $this->assertEquals(7, iterator_count($it));
         $this->assertTrue($it->find('hithere')->value());
         $this->assertEquals('cheese', $it->find('c')->value());
-
+        
+        // 1 - Added tests to check for hyphens in argument names
+        $this->assertTrue($it->find('lots-of-hyphens')->value());
+        $this->assertEquals('alrighty', $it->find('with-hyphen')->value());
+        
         // Since iterator_count() was used, the iterator position should be at the end.
-        $this->assertEquals(5, $it->key());
+        $this->assertEquals(7, $it->key());
 
         // Return to start and check the first item is "hithere" with a value of true
         $it->rewind();
